@@ -83,19 +83,48 @@
 \section{Preface} 
 \ac{nlp} is a field in computer science that focuses on processing human language. Human language can be referred to as a natural language as it has evolved overtime without strict syntax rules that one would find in programming languages. A simple example of \ac{nlp} would be processing a sentence and identifying the verb, subject, adjective. Writing a program to process a scholarly article and generate a summary would be a more advanced application of \ac{nlp}.
 
-In recent years \ac{cnn}s, a deep learning technique for image classification, have gained huge popularity after Alex Krizhevsky won the Imagenet LSVRC2012 competition with his network \cite{alex}.
+In recent years \ac{cnn}s, a deep learning technique for image classification, have gained huge popularity after Alex Krizhevsky won the Imagenet LSVRC2012 competition with his network \cite{alex}. Since then \ac{cnn}s are being applied many other applications such as audio processing and even \ac{nlp}.
+
+Over the course of the semester I will explore the use of \ac{cnn}s and their applications to \ac{nlp}. This document will serve as a means to capture what I've learned, and record my results. 
 
 \section{Development Schedule}
 
-In Figure \ref{fig:schedule} the development schedule is shown for the project. Past, present, and future events are shown on this schedule. At time of submitting this CDR document it will be February 29th. At this point the project is in development. 
+In Figure \ref{fig:schedule} the development schedule is shown for the semester. This chart was created as a way to set short term goals for the semester to keep myself on task. The semester is broken down into research, testing and evaluation, and finally documentation and presentation at the end of the semester. 
 
-\begin{figure}[htbp]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[scale=.5]{gantt.PNG}
   \caption{Project Development Schedule}
   \label{fig:schedule}
 \end{figure}
 
+
+\section{Co-occurence Matrices}
+
+One of the more successful ideas from \ac{nlp} is the idea of using the surrounding words in a sentence to represent a word. This brought about the idea of the co-occurence matrix. This matrix captures the number of times a other word occurs directly next to it in a dataset. For example in the Standford Deep Learning Course \cite{dl_course}, they show the following example:
+
+\begin{itemize}
+	\item I like deep learning.
+	\item I like NLP.
+	\item I enjoy flying.
+\end{itemize}
+
+\begin{figure}[htbp!]
+	\centering
+	\includegraphics[scale=.4]{cooccurence.png}
+	\caption{Co-occurence Matrix example.}
+	\label{fig:cooccurence}
+\end{figure}
+
+This matrix shown in Figure \ref{fig:cooccurence} displays the number of times words appear next to each other in the three sentences above. The idea is that each row represents a feature vector that characterizes each word in the whole dataset.
+
+There are obvious drawbacks to representing words in this way. One being that as the number of words in the dataset increases, so does the dimensionality of the matrix and as a result the vectors.
+
+\section{Word2Vec}
+
+This is a new technique \cite{word2vec} for predicting the words around a word and encoding this in a vector for classification.
+
+Does not have the issues of co-occurrence matrices in that they are fast and flexible in terms of adding new words/sentences.
 
 \newpage
 \bibliography{Austin_Dress_NLP_CNN_Summer_2016.bib}

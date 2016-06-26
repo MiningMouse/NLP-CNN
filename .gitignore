@@ -1,0 +1,24 @@
+*.idea/
+assignment1/
+
+# latex files
+*.aux
+*.bbl
+*.blg
+*.log
+*.lot
+*.out
+*.pdf
+*.gz
+*.toc
+*.png
+
+# saved models/binaries
+*.npy
+*.pyc
+*.pickle
+
+*~
+*.bak
+
+
