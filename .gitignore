@@ -17,7 +17,9 @@ assignment1/
 *.npy
 *.pyc
 *.pickle
-
+*.h5
+*.neg
+*.pos
 *~
 *.bak
 

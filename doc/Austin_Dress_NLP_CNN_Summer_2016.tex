@@ -57,6 +57,7 @@
 \acrodef{nlp}[NLP]{Natural Language Processing}
 \acrodef{bow}[BOW]{Bag of Words}
 \acrodef{cnn}[CNN]{Convolutional Neural Network}
+\acrodef{rnn}[RNN]{Recurrent Neural Network}
 %%% paragraph spacing
 %\setlength{\parindent}{4em}
 \setlength{\parskip}{1em}
@@ -126,8 +127,24 @@ This is a new technique \cite{word2vec} for predicting the words around a word a
 
 Does not have the issues of co-occurrence matrices in that they are fast and flexible in terms of adding new words/sentences.
 
+\section {Keras}
+Keras \cite{chollet2015keras} is one of the many nerual network frameworks/libraries available for deep learning. Keras is very modular and supports \ac{cnn}s, \ac{rnn}s, and standard neural networks. Keras technically is a python wrapper around the Theano and TensorFlow deep learning frameworks. I decided to use this tool to construct \ac{cnn}s due to it's flexibility and rapid prototyping capability. Changing the number of filters in a \ac{cnn}, size, and\slash or number of fully connected layers is very simple. 
+
+
+\section{Setup IMDB}
+Dataset came with training and testing sets already defined. In total for training there were 24722 labeled reviews, and for testing there were a similar number of 24723 reviews that are unfortunately unlabeled. This dataset was attained through a Kaggle Data Science Competition. The competition has since ended but the dataset is still available. Since the hosted data was for a competition, Kaggle only provided the labeled training set. For this reason, I had to split the data to make my own training and test sets. The data was split 80\slash20 for training and testing respectively.
+
+pos train: 9873
+neg train: 9905
+
+neg test = 2444
+pos test = 2500
+
 \newpage
 \bibliography{Austin_Dress_NLP_CNN_Summer_2016.bib}
 \bibliographystyle{plain}
+
+
+
 
 \end{document}
