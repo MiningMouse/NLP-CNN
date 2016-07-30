@@ -58,6 +58,7 @@
 \acrodef{bow}[BOW]{Bag of Words}
 \acrodef{cnn}[CNN]{Convolutional Neural Network}
 \acrodef{rnn}[RNN]{Recurrent Neural Network}
+\acrodef{api}[API]{Application Programming Interface}
 %%% paragraph spacing
 %\setlength{\parindent}{4em}
 \setlength{\parskip}{1em}
@@ -139,6 +140,19 @@ neg train: 9905
 
 neg test = 2444
 pos test = 2500
+
+
+\section{Twitter Dataset}
+
+Twitter is a social networking website \cite{twitter} where users can post 140 character messages on their accounts. Once the message is posted it is completely open to the entire Twitter user base. Twitter has evolved as a means of rapidly sharing information and events. For example, a company may choose to post that a new product is available on Twitter in addition to their website to reach a larger user base. Twitter posts are rich with sentiment and make it a good source for sentiment analysis.
+
+To date there are no large hand labeled twitter datasets available for sentiment analysis. This led several Stanford Researchers \cite{Go_Bhayani_Huang_2009} to collect and build their own dataset called Sentiment140 \cite{sentiment140}. Labeling individual tweets for sentiment is a very tedious task, so the authors came up with a very creative way to mine positive and negative tweets. Twitter data was collected through the Twitter \ac{api} and labeled by using positive and negative emoticons. For example, if a tweet included a smiley face ":)" it was considered positive. If a tweet contained both a positive and negative emoticons the tweet was not used. The dataset was collected between April 6, 2009 to June 25, 2009.
+
+In total there are 1.6 million tweets used for training. The number of positive and negative tweets are equal for train. The testing data is much smaller only containing 500 tweets. The tweets used for testing were hand labeled, where as the training tweets were mined.
+
+
+
+Based on paper Twitter Sentiment Classification using Distant Supervision \cite{Go_Bhayani_Huang_2009}. The dataset that they provide was
 
 \newpage
 \bibliography{Austin_Dress_NLP_CNN_Summer_2016.bib}
