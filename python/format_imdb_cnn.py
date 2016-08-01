@@ -23,23 +23,23 @@ if __name__ == '__main__':
     # get the number of exemplars
 
     num_exemplars = len(data["review"])
-    train_n = int(num_exemplars*0.8)
-
-    # shuffle the data
-    rand = np.random.RandomState(0)
-    shuffle = rand.permutation(num_exemplars)
-    data = data.iloc[np.random.permutation(num_exemplars)]
+    # train_n = int(num_exemplars*0.8)
+    #
+    # # shuffle the data
+    # rand = np.random.RandomState(0)
+    # shuffle = rand.permutation(num_exemplars)
+    # data = data.iloc[np.random.permutation(num_exemplars)]
 
 
     # train = data[0:train_n]
     # test = data[train_n:]
-    print ('Train Size: ' + str(train_n) +  ' Test Size: ' + str(num_exemplars-train_n) )
+    # print ('Train Size: ' + str(train_n) +  ' Test Size: ' + str(num_exemplars-train_n) )
 
     # create files to save positive and negative training examples
-    fp = open('imdb_train.pos', 'w')
-    fn = open('imdb_train.neg','w')
+    fp = open('imdb_train_all.pos', 'w')
+    fn = open('imdb_train_all.neg','w')
 
-    for i in xrange(0, train_n):
+    for i in xrange(0, num_exemplars):
         if data['sentiment'][i] == 1:
             fp.write(data['review'][i])
             fp.write('\n')
@@ -50,17 +50,17 @@ if __name__ == '__main__':
     fp.close()
     fn.close()
 
-    # create files to save positive and negative test examples
-    fp = open('imdb_test.pos','w')
-    fn = open('imdb_test.neg','w')
-
-    for i in xrange(train_n, len(data)):
-        if data['sentiment'][i] == 1:
-            fp.write(data['review'][i])
-            fp.write('\n')
-        else:
-            fn.write(data['review'][i])
-            fn.write('\n')
-
-    fp.close()
-    fn.close()
+    # # create files to save positive and negative test examples
+    # fp = open('imdb_test.pos','w')
+    # fn = open('imdb_test.neg','w')
+    #
+    # for i in xrange(train_n, len(data)):
+    #     if data['sentiment'][i] == 1:
+    #         fp.write(data['review'][i])
+    #         fp.write('\n')
+    #     else:
+    #         fn.write(data['review'][i])
+    #         fn.write('\n')
+    #
+    # fp.close()
+    # fn.close()

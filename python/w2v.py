@@ -3,8 +3,8 @@ from os.path import join, exists, split
 import os
 import numpy as np
 
-def train_word2vec(sentence_matrix, vocabulary_inv,
-                   num_features=300, min_word_count=1, context=10):
+def train_word2vec(sentence_matrix, vocabulary_inv, model_variation,
+                   num_features=300, min_word_count=1, context=10, ):
     """
     Trains, saves, loads Word2Vec model
     Returns initial weights for embedding layer.
@@ -17,7 +17,7 @@ def train_word2vec(sentence_matrix, vocabulary_inv,
     context         # Context window size 
     """
     model_dir = 'word2vec_models'
-    model_name = "{:d}features_{:d}minwords_{:d}context".format(num_features, min_word_count, context)
+    model_name = "{:d}features_{:d}minwords_{:d}context_{:s}".format(num_features, min_word_count, context, model_variation)
     model_name = join(model_dir, model_name)
     if exists(model_name):
         embedding_model = word2vec.Word2Vec.load(model_name)
@@ -49,6 +49,9 @@ def train_word2vec(sentence_matrix, vocabulary_inv,
                                                         else np.random.uniform(-0.25,0.25,embedding_model.vector_size)\
                                                         for w in vocabulary_inv])]
     return embedding_weights
+
+def get_word_embeddings():
+    pass
 
 if __name__=='__main__':
     import data_helpers

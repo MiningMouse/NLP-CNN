@@ -44,51 +44,72 @@ if __name__ == '__main__':
     # # test = data[train_n:]
     # print ('Train Size: ' + str(train_n) +  ' Test Size: ' + str(num_exemplars-train_n) )
 
+    data_size_limit = 100000
+
     # create files to save positive and negative training examples
-    fp = open('twitter_train.pos', 'w')
-    fn = open('twitter_train.neg','w')
+    fp = open('twitter_train_50000_and_test.pos', 'w')
+    fn = open('twitter_train_50000_and_test.neg','w')
     count_pos = 0
     count_neg = 0
     for i in xrange(0, len(l_train)):
         if  l_train[i] == 4:
-            fp.write(d_train[i])
-            fp.write('\n')
-            count_pos += 1
+            if count_pos < data_size_limit:
+                fp.write(d_train[i])
+                fp.write('\n')
+                count_pos += 1
         else:
-            fn.write(d_train[i])
-            fn.write('\n')
-            count_neg += 1
-    fp.close()
-    fn.close()
-    print "Train Negative and Positive Data Count:"
-    print count_neg, count_pos
-
-
+            if count_neg < data_size_limit:
+                fn.write(d_train[i])
+                fn.write('\n')
+                count_neg += 1
     count_pos = 0
     count_neg = 0
-    count_neu = 0
-    # create files to save positive and negative test examples
-    fp = open('twitter_test.pos','w') # positve
-    fn = open('twitter_test.neg','w') # negative
-    fneu = open('twitter_test.neg', 'w') # neutral
-
     for i in xrange(0, len(l_test)):
         if l_test[i] == 4:
+            count_pos +=1
             fp.write(d_test[i])
             fp.write('\n')
-            count_pos +=1
-        elif l_test[i] == 2:
-            fneu.write(d_test[i])
-            fneu.write('\n')
-            count_neu += 1
-        else:
+        elif l_test[i] == 0:
+            count_neg +=1
             fn.write(d_test[i])
             fn.write('\n')
-            count_neg += 1
 
+
+    print "pos"
+    print count_pos
+    print "neg"
+    print count_neg
     fp.close()
     fn.close()
-    fneu.close()
-
-    print "Test Negative, Positive, Neutral Data Count:"
-    print count_neg, count_pos, count_neu
+    # print "Train Negative and Positive Data Count:"
+    # print count_neg, count_pos
+    #
+    #
+    # count_pos = 0
+    # count_neg = 0
+    # count_neu = 0
+    # # create files to save positive and negative test examples
+    # fp = open('twitter_test.pos','w') # positve
+    # fn = open('twitter_test.neg','w') # negative
+    # fneu = open('twitter_test.neu', 'w') # neutral
+    #
+    # for i in xrange(0, len(l_test)):
+    #     if l_test[i] == 4:
+    #         fp.write(d_test[i])
+    #         fp.write('\n')
+    #         count_pos +=1
+    #     elif l_test[i] == 2:
+    #         fneu.write(d_test[i])
+    #         fneu.write('\n')
+    #         count_neu += 1
+    #     else:
+    #         fn.write(d_test[i])
+    #         fn.write('\n')
+    #         count_neg += 1
+    #
+    # fp.close()
+    # fn.close()
+    # fneu.close()
+    #
+    # print "Test Negative, Positive, Neutral Data Count:"
+    # print count_neg, count_pos, count_neu

@@ -48,12 +48,16 @@ def load_data_and_labels(positive_path, negative_path):
     return [x_text, y]
 
 
-def pad_sentences(sentences, padding_word="<PAD/>"):
+def pad_sentences(sentences, padding_word="<PAD/>", sequence_length=None):
     """
     Pads all sentences to the same length. The length is defined by the longest sentence.
     Returns padded sentences.
     """
-    sequence_length = max(len(x) for x in sentences)
+
+    # if no sequence length is provided, calculate one
+    if sequence_length == None:
+        sequence_length = max(len(x) for x in sentences)
+
     padded_sentences = []
     for i in range(len(sentences)):
         sentence = sentences[i]

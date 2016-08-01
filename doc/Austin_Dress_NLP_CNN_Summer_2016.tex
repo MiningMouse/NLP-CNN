@@ -132,7 +132,7 @@ Does not have the issues of co-occurrence matrices in that they are fast and fle
 Keras \cite{chollet2015keras} is one of the many nerual network frameworks/libraries available for deep learning. Keras is very modular and supports \ac{cnn}s, \ac{rnn}s, and standard neural networks. Keras technically is a python wrapper around the Theano and TensorFlow deep learning frameworks. I decided to use this tool to construct \ac{cnn}s due to it's flexibility and rapid prototyping capability. Changing the number of filters in a \ac{cnn}, size, and\slash or number of fully connected layers is very simple. 
 
 
-\section{Setup IMDB}
+\section{IMDB Movie Review Dataset}
 Dataset came with training and testing sets already defined. In total for training there were 24722 labeled reviews, and for testing there were a similar number of 24723 reviews that are unfortunately unlabeled. This dataset was attained through a Kaggle Data Science Competition. The competition has since ended but the dataset is still available. Since the hosted data was for a competition, Kaggle only provided the labeled training set. For this reason, I had to split the data to make my own training and test sets. The data was split 80\slash20 for training and testing respectively.
 
 pos train: 9873
@@ -141,8 +141,23 @@ neg train: 9905
 neg test = 2444
 pos test = 2500
 
+train 18000, 2000 validation, 5000 test
+Vocabulary size = 81322 words
 
-\section{Twitter Dataset}
+accuracy:86.06 percent
+
+Confusion Matrices
+[[1897  581]
+[ 116 2406]]
+
+[[ 0.77  0.23]
+[ 0.05  0.95]]
+
+
+
+
+
+\section{Twitter Sentiment Dataset}
 
 Twitter is a social networking website \cite{twitter} where users can post 140 character messages on their accounts. Once the message is posted it is completely open to the entire Twitter user base. Twitter has evolved as a means of rapidly sharing information and events. For example, a company may choose to post that a new product is available on Twitter in addition to their website to reach a larger user base. Twitter posts are rich with sentiment and make it a good source for sentiment analysis.
 
@@ -150,9 +165,15 @@ To date there are no large hand labeled twitter datasets available for sentiment
 
 In total there are 1.6 million tweets used for training. The number of positive and negative tweets are equal for train. The testing data is much smaller only containing 500 tweets. The tweets used for testing were hand labeled, where as the training tweets were mined.
 
-
+Vocabulary Size 564692 words.
+Max Sequence length was 52 words.
 
 Based on paper Twitter Sentiment Classification using Distant Supervision \cite{Go_Bhayani_Huang_2009}. The dataset that they provide was
+
+after 7 epochs
+rand - 78 %
+cnn-non-static - 75 % 75.98 %
+cnn- static
 
 \newpage
 \bibliography{Austin_Dress_NLP_CNN_Summer_2016.bib}
