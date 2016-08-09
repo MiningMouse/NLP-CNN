@@ -131,6 +131,37 @@ Does not have the issues of co-occurrence matrices in that they are fast and fle
 \section {Keras}
 Keras \cite{chollet2015keras} is one of the many nerual network frameworks/libraries available for deep learning. Keras is very modular and supports \ac{cnn}s, \ac{rnn}s, and standard neural networks. Keras technically is a python wrapper around the Theano and TensorFlow deep learning frameworks. I decided to use this tool to construct \ac{cnn}s due to it's flexibility and rapid prototyping capability. Changing the number of filters in a \ac{cnn}, size, and\slash or number of fully connected layers is very simple. 
 
+\section {Data Preprocessing and Cleaning}
+Similar to image processing where a image may be preprocessed by convolving a gaussian kernel and normalizing the image, \ac{nlp} also has its own form of data preprocessing. Take for example the following tweets from the Sentiment140 dataset \cite{sentiment140}:
+
+\begin{enumerate}
+\item \#poemsunder140 ....started by \@shannonelyse1
+\item Juuuuuuuuuuuuuuuuussssst Chillin!!
+\item :-D ))))))))...WHAT AN AMAZING NIGHT,DAY \&amp; NIGHT AGAIN!! HI TWITS! I MiSS U GUYS"
+\item @dandelionas is making fettucini and garlic bread!
+\end{enumerate} 
+
+Twitter tweets contain text fields known as ``hash tags", a phrase proceeded by a ``\#" symbol, and an ``at" symbol, a username proceeded by an ``@" symbol. Tweets 1 and 4 contain such information and for the purposes of sentiment analysis are extraneous as hastags and twitter usernames do not tend to appear or relate to sentiment. In addition, repeated letters in words, capitalization of entire words, punctuation marks, and emoticons are removed. Prior to being passed to a classifier for training or testing these tweets would be converted to the following (as an example): 
+
+\begin{enumerate}
+	\item started by
+	\item just chillin
+	\item what an amazing night day night again hit twits i miss u guys
+	\item is making fettucini and garlic bread
+\end{enumerate} 
+
+This cleaning and preprocessing step is typically exploits regular expressions to quickly locate the patterns previously mentioned and remove them.
+
+
+\section {Bag of Words}
+
+The Bag of Words algorithm is used in many \ac{nlp} applications. Here the general algorithm is described as it was used as a baseline for the two datasets used during the semester. As an example take the common American English language tongue-twister:
+
+How much wood could a woodchuck chuck if a woodchuck could chuck wood?
+
+The response to this question typically is as follows:
+
+A woodchuck would chuck as much wood as a wouldchuck could chuck if a woodchuck could chuck wood.
 
 \section{IMDB Movie Review Dataset}
 Dataset came with training and testing sets already defined. In total for training there were 24722 labeled reviews, and for testing there were a similar number of 24723 reviews that are unfortunately unlabeled. This dataset was attained through a Kaggle Data Science Competition. The competition has since ended but the dataset is still available. Since the hosted data was for a competition, Kaggle only provided the labeled training set. For this reason, I had to split the data to make my own training and test sets. The data was split 80\slash20 for training and testing respectively.
@@ -174,6 +205,20 @@ after 7 epochs
 rand - 78 %
 cnn-non-static - 75 % 75.98 %
 cnn- static
+
+cnn-non-static on 359 test exemplars after 7 epochs
+[[130  47]
+[ 37 145]]
+
+[[ 0.73  0.27]
+[ 0.2   0.8 ]]
+
+100 features
+[[142  35]
+[ 42 140]]
+[[ 0.8   0.2 ]
+[ 0.23  0.77]]
+
 
 \newpage
 \bibliography{Austin_Dress_NLP_CNN_Summer_2016.bib}
