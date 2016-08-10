@@ -30,6 +30,8 @@
 \usepackage{booktabs}
 \usepackage{gensymb}
 \usepackage[nottoc]{tocbibind}
+\usepackage{hyperref}
+\usepackage{cleveref}
 
 \definecolor{Gray}{gray}{0.9}
 
@@ -55,10 +57,10 @@
 \setlength{\parindent}{0in}
 
 \acrodef{nlp}[NLP]{Natural Language Processing}
-\acrodef{bow}[BOW]{Bag of Words}
 \acrodef{cnn}[CNN]{Convolutional Neural Network}
 \acrodef{rnn}[RNN]{Recurrent Neural Network}
 \acrodef{api}[API]{Application Programming Interface}
+\acrodef{bow}[BOW]{Bag of Words}
 %%% paragraph spacing
 %\setlength{\parindent}{4em}
 \setlength{\parskip}{1em}
@@ -91,19 +93,36 @@ Over the course of the semester I will explore the use of \ac{cnn}s and their ap
 
 \section{Development Schedule}
 
-In Figure \ref{fig:schedule} the development schedule is shown for the semester. This chart was created as a way to set short term goals for the semester to keep myself on task. The semester is broken down into research, testing and evaluation, and finally documentation and presentation at the end of the semester. 
-
-\begin{figure}[htbp!]
-  \centering
-  \includegraphics[scale=.5]{gantt.PNG}
-  \caption{Project Development Schedule}
-  \label{fig:schedule}
-\end{figure}
+In \cref{App:AppendixA} the development schedule is shown for the semester. This chart was created as a way to set short term goals for the semester to keep myself on task. The semester is broken down into research, testing and evaluation, and finally documentation and presentation at the end of the semester. 
 
 
-\section{Co-occurence Matrices}
+\section {Background and Previous Work}
+Prior to beginning the semester I had very little experience with \ac{nlp} and thus needed to do some reading on how traditional classifiers are built for sentiment analysis. In this section I cover data preparation that is necessary in any \ac{nlp} task as well as two feature vector representations for language. When training a classifier for any type of task the input is usually a feature vector containing floating point numbers and integer labels. As a result words must be converted to a number representation. 
 
-One of the more successful ideas from \ac{nlp} is the idea of using the surrounding words in a sentence to represent a word. This brought about the idea of the co-occurence matrix. This matrix captures the number of times a other word occurs directly next to it in a dataset. For example in the Standford Deep Learning Course \cite{dl_course}, they show the following example:
+\subsection {Data Preprocessing and Cleaning}
+Similar to image processing where a image may be preprocessed by convolving a gaussian kernel and normalizing the image, \ac{nlp} also has its own form of data preprocessing. Take for example the following tweets from the Sentiment140 dataset \cite{sentiment140}:
+
+\begin{enumerate}
+	\item \#poemsunder140 ....started by \@shannonelyse1
+	\item Juuuuuuuuuuuuuuuuussssst Chillin!!
+	\item :-D ))))))))...WHAT AN AMAZING NIGHT,DAY \&amp; NIGHT AGAIN!! HI TWITS! I MiSS U GUYS"
+	\item @dandelionas is making fettucini and garlic bread!
+\end{enumerate} 
+
+Twitter tweets contain text fields known as ``hash tags", a phrase proceeded by a ``\#" symbol, and an ``at" symbol, a username proceeded by an ``@" symbol. Tweets 1 and 4 contain such information and for the purposes of sentiment analysis are extraneous as hastags and twitter usernames do not tend to appear or relate to sentiment. In addition, repeated letters in words, capitalization of entire words, punctuation marks, and emoticons are removed. Prior to being passed to a classifier for training or testing these tweets would be converted to the following (as an example): 
+
+\begin{enumerate}
+	\item started by
+	\item just chillin
+	\item what an amazing night day night again hit twits i miss u guys
+	\item is making fettucini and garlic bread
+\end{enumerate} 
+
+This cleaning and preprocessing step is typically exploits regular expressions to quickly locate the patterns previously mentioned and remove them.
+
+\subsection{Co-occurence Matrices}
+
+One method for representing a word in a document in \ac{nlp} is to use use the surrounding words in a sentence to represent a word. This brought about the idea of the co-occurence matrix. This matrix captures the number of times a other word occurs directly next to it in a dataset. For example in the Standford Deep Learning Course \cite{dl_course}, they show the following example:
 
 \begin{itemize}
 	\item I like deep learning.
@@ -120,9 +139,29 @@ One of the more successful ideas from \ac{nlp} is the idea of using the surround
 
 This matrix shown in Figure \ref{fig:cooccurence} displays the number of times words appear next to each other in the three sentences above. The idea is that each row represents a feature vector that characterizes each word in the whole dataset.
 
-There are obvious drawbacks to representing words in this way. One being that as the number of words in the dataset increases, so does the dimensionality of the matrix and as a result the vectors.
+There are obvious drawbacks to representing words in this way. One being that as the number of words in the dataset increases, so does the dimensionality of the matrix. Representing words in this way allows us to create a similarity metric between words as words in human language tend to appear next to each other. In Section \ref{word2vec} the Word2Vec word representation is covered. Word2Vec is a more state of the art word representation technique.
 
-\section{Word2Vec}
+\subsection {\ac{bow}}
+
+The \ac{bow} algorithm is used in many \ac{nlp} applications such as sentiment analysis and also has applications in image processing. The general algorithm is described as it was used as a baseline for the two datasets used during the semester. The \ac{bow} algorithm and its word representation is  fairly intuitive. As an example take the common American English language tongue-twister and its response:
+
+\begin{enumerate}
+	\item How much wood could a woodchuck chuck if a woodchuck could chuck wood?
+	\item A woodchuck would chuck as much wood as a wouldchuck could chuck if a woodchuck could chuck wood.
+\end{enumerate} 
+
+From these two sentences a vocabulary, or word corpus, can be built. For these two phrases the corpus would be: \{\textit{how, much, wood, could, a, woodchuck, chuck, if, would, as}\}.
+
+\ac{bow} builds a feature vector for a sentence, paragraph, or document by counting the number of time a given word appears. For the two phrases listed above the feature vector representations would be as follows:
+
+\begin{enumerate}
+	\item \{1,1,2,2,2,2,2,1,0,0\}
+	\item \{0,1,2,2,3,3,3,1,1,2\} 
+\end{enumerate} 
+
+One of the nice features of \ac{bow} is that the feature vectors produced by it are always the same length. The main downfall of the \ac{bow} is that as the corpus size increases so does the dimensionality of the feature vector. This results in feature vectors that are very sparse. For example, training \ac{bow} on the Twitter tweets would result in feature vectors with many zeros as tweets are limited to 140 characters. It is for this reason that a corpus size limit of, for example 5000 words is enforced. 
+
+\section{Word2Vec} \label{word2vec}
 
 This is a new technique \cite{word2vec} for predicting the words around a word and encoding this in a vector for classification.
 
@@ -131,37 +170,7 @@ Does not have the issues of co-occurrence matrices in that they are fast and fle
 \section {Keras}
 Keras \cite{chollet2015keras} is one of the many nerual network frameworks/libraries available for deep learning. Keras is very modular and supports \ac{cnn}s, \ac{rnn}s, and standard neural networks. Keras technically is a python wrapper around the Theano and TensorFlow deep learning frameworks. I decided to use this tool to construct \ac{cnn}s due to it's flexibility and rapid prototyping capability. Changing the number of filters in a \ac{cnn}, size, and\slash or number of fully connected layers is very simple. 
 
-\section {Data Preprocessing and Cleaning}
-Similar to image processing where a image may be preprocessed by convolving a gaussian kernel and normalizing the image, \ac{nlp} also has its own form of data preprocessing. Take for example the following tweets from the Sentiment140 dataset \cite{sentiment140}:
 
-\begin{enumerate}
-\item \#poemsunder140 ....started by \@shannonelyse1
-\item Juuuuuuuuuuuuuuuuussssst Chillin!!
-\item :-D ))))))))...WHAT AN AMAZING NIGHT,DAY \&amp; NIGHT AGAIN!! HI TWITS! I MiSS U GUYS"
-\item @dandelionas is making fettucini and garlic bread!
-\end{enumerate} 
-
-Twitter tweets contain text fields known as ``hash tags", a phrase proceeded by a ``\#" symbol, and an ``at" symbol, a username proceeded by an ``@" symbol. Tweets 1 and 4 contain such information and for the purposes of sentiment analysis are extraneous as hastags and twitter usernames do not tend to appear or relate to sentiment. In addition, repeated letters in words, capitalization of entire words, punctuation marks, and emoticons are removed. Prior to being passed to a classifier for training or testing these tweets would be converted to the following (as an example): 
-
-\begin{enumerate}
-	\item started by
-	\item just chillin
-	\item what an amazing night day night again hit twits i miss u guys
-	\item is making fettucini and garlic bread
-\end{enumerate} 
-
-This cleaning and preprocessing step is typically exploits regular expressions to quickly locate the patterns previously mentioned and remove them.
-
-
-\section {Bag of Words}
-
-The Bag of Words algorithm is used in many \ac{nlp} applications. Here the general algorithm is described as it was used as a baseline for the two datasets used during the semester. As an example take the common American English language tongue-twister:
-
-How much wood could a woodchuck chuck if a woodchuck could chuck wood?
-
-The response to this question typically is as follows:
-
-A woodchuck would chuck as much wood as a wouldchuck could chuck if a woodchuck could chuck wood.
 
 \section{IMDB Movie Review Dataset}
 Dataset came with training and testing sets already defined. In total for training there were 24722 labeled reviews, and for testing there were a similar number of 24723 reviews that are unfortunately unlabeled. This dataset was attained through a Kaggle Data Science Competition. The competition has since ended but the dataset is still available. Since the hosted data was for a competition, Kaggle only provided the labeled training set. For this reason, I had to split the data to make my own training and test sets. The data was split 80\slash20 for training and testing respectively.
@@ -219,6 +228,28 @@ cnn-non-static on 359 test exemplars after 7 epochs
 [[ 0.8   0.2 ]
 [ 0.23  0.77]]
 
+
+\newpage
+\appendix
+\section{\\Project Development Schedule} \label{App:AppendixA}
+% the \\ insures the section title is centered below the phrase: AppendixA
+\begin{figure}[htbp!]
+	\centering
+	\includegraphics[scale=.5]{gantt.PNG}
+	\caption{Project Development Schedule}
+%	\label{fig:schedule}
+\end{figure}
+
+\newpage
+\section{\\Word2Vec Feature Plot} \label{App:AppendixB}
+% the \\ insures the section title is centered below the phrase: Appendix B
+
+\begin{figure}[htbp!]\centering
+	\centering
+	\includegraphics[scale=.5]{tsne.png}
+	\caption{Word2Vec vector plot showing that similar words appear near each other in the feature space \cite{tensorflow}.}
+	%	\label{fig:schedule}
+\end{figure}
 
 \newpage
 \bibliography{Austin_Dress_NLP_CNN_Summer_2016.bib}
