@@ -87,14 +87,14 @@
 \section{Preface} 
 \ac{nlp} is a field in computer science that focuses on processing human language. Human language can be referred to as a natural language as it has evolved overtime without strict syntax rules that one would find in programming languages. A simple example of \ac{nlp} would be processing a sentence and identifying the verb, subject, adjective. Writing a program to process a scholarly article and generate a summary would be a more advanced application of \ac{nlp}.
 
-In recent years \ac{cnn}s, a deep learning technique for image classification, have gained huge popularity after Alex Krizhevsky won the Imagenet LSVRC2012 competition with his network \cite{alex}. Since then \ac{cnn}s are being applied many other applications such as audio processing and even \ac{nlp}.
+In recent years \ac{cnn}s, a deep learning technique for image classification, have gained huge popularity after Alex Krizhevsky won the Imagenet LSVRC2012 competition with his network \cite{alex}. Since then \ac{cnn}s have shown promising results in many other domains such as audio processing and \ac{nlp}. 
 
-Over the course of the semester I will explore the use of \ac{cnn}s and their applications to \ac{nlp}. This document will serve as a means to capture what I've learned, and record my results. 
+
+Over the course of the semester I explored using Word2Vec \cite{word2vec} to create word embeddings and then train a \ac{cnn} on the embeddings for sentiment analysis of various datasets. This document captures topics in \ac{nlp} that I explored throughout the semester, and my classification results for two datasets.
 
 \section{Development Schedule}
 
 In \cref{App:AppendixA} the development schedule is shown for the semester. This chart was created as a way to set short term goals for the semester to keep myself on task. The semester is broken down into research, testing and evaluation, and finally documentation and presentation at the end of the semester. 
-
 
 \section {Background and Previous Work}
 Prior to beginning the semester I had very little experience with \ac{nlp} and thus needed to do some reading on how traditional classifiers are built for sentiment analysis. In this section I cover data preparation that is necessary in any \ac{nlp} task as well as two feature vector representations for language. When training a classifier for any type of task the input is usually a feature vector containing floating point numbers and integer labels. As a result words must be converted to a number representation. 
@@ -141,7 +141,7 @@ This matrix shown in Figure \ref{fig:cooccurence} displays the number of times w
 
 There are obvious drawbacks to representing words in this way. One being that as the number of words in the dataset increases, so does the dimensionality of the matrix. Representing words in this way allows us to create a similarity metric between words as words in human language tend to appear next to each other. In Section \ref{word2vec} the Word2Vec word representation is covered. Word2Vec is a more state of the art word representation technique.
 
-\subsection {\ac{bow}}
+\subsection {Bag of Words}
 
 The \ac{bow} algorithm is used in many \ac{nlp} applications such as sentiment analysis and also has applications in image processing. The general algorithm is described as it was used as a baseline for the two datasets used during the semester. The \ac{bow} algorithm and its word representation is  fairly intuitive. As an example take the common American English language tongue-twister and its response:
 
@@ -163,12 +163,76 @@ One of the nice features of \ac{bow} is that the feature vectors produced by it 
 
 \section{Word2Vec} \label{word2vec}
 
-This is a new technique \cite{word2vec} for predicting the words around a word and encoding this in a vector for classification.
+Word2Vec \cite{word2vec} is an unsupervised learning technique for generating word embeddings developed in C++ by Google. Word2Vec is similar to co-occurence matrices previously mentioned, but produces very dense word vector representations. These word vectors contain rich information about how they relate to other words. This concept is similar to finding a strong correlation between neighbor pixels in an image. In the case of an image RGB values are known already. With sentences it's clear to a human that there is correlation between words in sentence, but it's not clear how to capture this information in a vector space. Word2Vec is one solution to this problem though there are others such as GloVe \cite{pennington2014glove} researched at Stanford.
 
-Does not have the issues of co-occurrence matrices in that they are fast and flexible in terms of adding new words/sentences.
+Training a Word2Vec model is as simple as taking a text dataset, preprocessing it, and feeding the sentences into the training function. The Gensim \cite{rehurek_lrec} library was utilized to train and test Word2Vec models. Gensim is a Python wrapper around Google's C++ code that makes setting up data and training a model easier.
 
-\section {Keras}
+Prior to training a Word2Vec model Gensim requires that several parameters be set:
+
+\begin{table}[!htbp]
+	\centering
+	\footnotesize
+	\begin{tabular}{|>{\raggedright\arraybackslash}m{30mm}|m{70mm}|m{20mm}|m{20mm}|}
+		\hline
+		\rowcolor{Gray}
+		\multicolumn{1}{|>{\centering\arraybackslash}m{30mm}|}{\textbf{Parameter}} 
+		& \multicolumn{1}{>{\centering\arraybackslash}m{70mm}|}{\textbf{Description}} 
+		& \multicolumn{1}{>{\centering\arraybackslash}m{20mm}|}{\textbf{Typical Value}}\\ \hline
+		num\_features       & Word Vector Dimensionality & 300          \\ \hline
+		min\_word\_count   &  Minimum number of times word must appear to be included & 40          \\ \hline
+		context  & Context window Size     & 10     \\ \hline
+		downsampling & Downsample setting for frequent words           & 1e-3           \\ \hline
+	\end{tabular}
+	\caption{Input parameters for training a Word2Vec model.}
+	\label{table:gensim_inputs}
+\end{table}
+
+The values shown in Table \ref{table:gensim_inputs} are the main tunable parameters for the algorithm. In general 300 feature dimensions produces good results. The minimum word count is a good way to remove words that are misspelled. 
+
+\begin{figure}[htbp!]
+	\centering
+	\includegraphics[scale=.3]{linear-relationships.png}
+	\caption{Word vector visualization \cite{tensorflow} showing semantic relationships between words.}
+	\label{fig:linear-relation}
+\end{figure}
+
+Figure \ref{fig:linear-relation} and Appendix \ref{App:AppendixB} show words plotted in feature space after dimension reduction and projection. These plots show the power of Word2Vec word embeddings as similar words are spatially close to each other. Performing vector addition and subtraction reveals interesting properties. Specifically the embeddings are able to capture analogies. Several Word2Vec models were trained throughout the semester. Below I show several screenshots of outputs from a model I trained.
+
+\begin{figure}[htbp!]
+	\centering
+	\includegraphics[scale=.5]{man_woman.png}
+	\caption{Example of Word2Vec vector addition and subtraction.}
+	\label{fig:man_woman}
+\end{figure}
+
+In Figure \ref{fig:man_woman} I demonstrate the following vector addition and subtraction: woman + king - man. The output of the model suggests the top 10 closest words in the vector space. Queen is the closest in the feature space and is likely the answer that human would give to this analogy.
+
+\begin{figure}[htbp!]
+	\centering
+	\includegraphics[scale=.5]{tea_cup.png}
+	\caption{Word2Vec determining which word does not belong.}
+	\label{fig:tea_cup}
+\end{figure}
+
+Related words are closely spaced in feature space which makes it possible to do other interesting tasks such as identifying words that do not belong in the same set/classification. Figure \ref{fig:tea_cup} shows that Word2Vec embeddings can correctly identify that the words \{hat, dog, paper\} do not belong to the same set of words \{tea, cup, sugar\}.
+
+
+\section {Keras: Designing a CNN Network for Sentence Classification}
 Keras \cite{chollet2015keras} is one of the many nerual network frameworks/libraries available for deep learning. Keras is very modular and supports \ac{cnn}s, \ac{rnn}s, and standard neural networks. Keras technically is a python wrapper around the Theano and TensorFlow deep learning frameworks. I decided to use this tool to construct \ac{cnn}s due to it's flexibility and rapid prototyping capability. Changing the number of filters in a \ac{cnn}, size, and\slash or number of fully connected layers is very simple. 
+
+\begin{figure}[htbp!]
+	\centering
+	\includegraphics[scale=.4]{network_structure.png}
+	\caption{Example \ac{cnn} architecture for sentence classification \cite{kim2014convolutional}.}
+	\label{fig:network_structure}
+\end{figure}
+
+\begin{figure}[htbp!]
+	\centering
+	\includegraphics[scale=.4]{training.png}
+	\caption{Output from Keras when training a \ac{cnn}.}
+	\label{fig:training}
+\end{figure}
 
 
 
@@ -194,14 +258,11 @@ Confusion Matrices
 [ 0.05  0.95]]
 
 
-
-
-
 \section{Twitter Sentiment Dataset}
 
 Twitter is a social networking website \cite{twitter} where users can post 140 character messages on their accounts. Once the message is posted it is completely open to the entire Twitter user base. Twitter has evolved as a means of rapidly sharing information and events. For example, a company may choose to post that a new product is available on Twitter in addition to their website to reach a larger user base. Twitter posts are rich with sentiment and make it a good source for sentiment analysis.
 
-To date there are no large hand labeled twitter datasets available for sentiment analysis. This led several Stanford Researchers \cite{Go_Bhayani_Huang_2009} to collect and build their own dataset called Sentiment140 \cite{sentiment140}. Labeling individual tweets for sentiment is a very tedious task, so the authors came up with a very creative way to mine positive and negative tweets. Twitter data was collected through the Twitter \ac{api} and labeled by using positive and negative emoticons. For example, if a tweet included a smiley face ":)" it was considered positive. If a tweet contained both a positive and negative emoticons the tweet was not used. The dataset was collected between April 6, 2009 to June 25, 2009.
+To date there are no large hand labeled twitter datasets available for sentiment analysis. This led several Stanford Researchers \cite{Go_Bhayani_Huang_2009} to collect and build their own dataset called Sentiment140 \cite{sentiment140}. Labeling individual tweets for sentiment is a very tedious task, so the authors came up with a very creative way to mine positive and negative tweets. Twitter data was collected through the Twitter \ac{api} and labeled by using positive and negative emoticons. For example, if a tweet included a smiley face ``:)" it was considered positive. If a tweet contained both a positive and negative emoticons the tweet was not used. The dataset was collected between April 6, 2009 to June 25, 2009.
 
 In total there are 1.6 million tweets used for training. The number of positive and negative tweets are equal for train. The testing data is much smaller only containing 500 tweets. The tweets used for testing were hand labeled, where as the training tweets were mined.
 
@@ -209,6 +270,8 @@ Vocabulary Size 564692 words.
 Max Sequence length was 52 words.
 
 Based on paper Twitter Sentiment Classification using Distant Supervision \cite{Go_Bhayani_Huang_2009}. The dataset that they provide was
+
+Used same CNN network structure \cite{kim2014convolutional}
 
 after 7 epochs
 rand - 78 %

@@ -110,9 +110,9 @@ if training == True:
     # dropout_prob = (0.25, 0.5)
     # hidden_dims = 150
 
-    embedding_dim = 20
+    embedding_dim = 100
     filter_sizes = (3, 4)
-    num_filters = 3
+    num_filters = 10
     dropout_prob = (0.7, 0.8)
     hidden_dims = 100
 
@@ -122,7 +122,7 @@ if training == True:
     val_split = 0.1
 
     # Word2Vec parameters, see train_word2vec
-    min_word_count = 1  # Minimum word count
+    min_word_count = 10  # Minimum word count
     context = 10        # Context window size
 
     # Data Preparatopn
